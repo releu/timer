@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            html, body {
+                height: 100%;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                color: white;
+                font-family: "YS Text", sans-serif;
+                position: relative;
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .controls {
+                align-self: center;
+                opacity: 0;
+            }
+
+            .controls__active {
+                opacity: 1;
+            }
+
+            .controls__row {
+                display: flex;
+            }
+
+            .controls__item {
+
+            }
+
+            .controls__item + .controls__item {
+                margin-left: 4px
+            }
+
+            .controls__row + .controls__row {
+                margin-top: 4px
+            }
+
+            .timer {
+                position: fixed;
+                display: flex;
+                justify-content: space-around;
+                background: black;
+                cursor: pointer;
+                transition: transform ease-in 200ms;
+            }
+
+            .timer:active {
+                transform: scale(0.95);
+            }
+
+            .timer__title {
+                align-self: center;
+                font-size: 72px;
+                text-align: center;
+                transition: font-size ease-in 200ms;
+                font-weight: 200;
+                padding-bottom: 0.5%;
+                position: relative;
+                user-select: none;
+            }
+
+            .timer_enabled {
+                left: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                transition: all ease-in 200ms;
+                z-index: 100;
+                width: auto !important;
+                height: auto !important;
+                margin: 0 !important;
+                transform: scale(1) !important;
+                cursor: default;
+            }
+
+            .timer_overtime .timer__title:before {
+                position: absolute;
+                content: '−';
+                right: 100%;
+            }
+
+            .timer_enabled .timer__title {
+                font-size: 288px;
+            }
+
+            .timer_alert {
+                background: red;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="controls">
+            <div class="controls__row">
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">02:00</div>
+                    </div>
+                </div>
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">05:00</div>
+                    </div>
+                </div>
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">07:00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls__row">
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">10:00</div>
+                    </div>
+                </div>
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">15:00</div>
+                    </div>
+                </div>
+                <div class="controls__item">
+                    <div class="timer">
+                        <div class="timer__title">20:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            setTimeout(function () {
+                var width = window.innerWidth
+                var height = window.innerHeight
+
+                var defaultFontSize = height / 10 + 'px'
+                var enabledFontSize = height / 2.5 + 'px'
+
+                var currentActiveTimer
+
+                var items = document.getElementsByClassName("controls__item")
+                Array.prototype.forEach.call(items, function (item) {
+                    item.style.width = Math.round(width / 4) + 'px'
+                    item.style.height = Math.round(height / 4) + 'px'
+
+                    item.getElementsByClassName('timer__title')[0].style.fontSize = height / 10 + 'px'
+
+                    setTimeout(function () {
+                        var rect = item.getBoundingClientRect()
+                        var timer = item.getElementsByClassName('timer')[0]
+                        var timerTitle = timer.getElementsByClassName('timer__title')[0]
+
+                        timer.style.left = rect.left + 'px'
+                        timer.style.top = rect.top + 'px'
+                        timer.style.right = (window.innerWidth - rect.left - rect.width) + 'px'
+                        timer.style.bottom = (window.innerHeight - rect.top - rect.height) + 'px'
+
+                        var clickEvent = timer.addEventListener('click', function () {
+                            if (this.className.indexOf('timer_enabled') > -1) {
+                                this.closeTimer()
+                                return
+                            }
+
+                            this.starting = true
+
+                            currentActiveTimer = this
+                            this.className = this.className + ' timer_enabled'
+
+                            timerTitle.style.fontSize = enabledFontSize
+
+                            if (!this.defaultTimerText) {
+                                this.defaultTimerText = timerTitle.innerText
+                            }
+                            var duration = parseInt(this.defaultTimerText.match(/[\d]+/)[0], 10)
+
+                            setTimeout(function () {
+                                this.starting = false
+                                var startTime = new Date()
+                                var endTime = new Date(startTime.getTime())
+                                endTime.setMinutes(endTime.getMinutes() + duration)
+
+                                this.timeInterval = setInterval(function () {
+                                    var secs = (endTime - new Date()) / 1000
+                                    var date = new Date(2018, 1, 1)
+
+                                    if (secs >= 0) {
+                                        date.setSeconds(secs)
+                                    } else {
+                                        date.setSeconds((new Date() - endTime) / 1000)
+                                    }
+
+                                    if (secs < 0 && !this.overTimeEnabled) {
+                                        this.overTimeEnabled = true
+
+                                        this.className += ' timer_overtime'
+                                    }
+
+                                    if (secs <= 60 && !this.minuteAlertEnabled) {
+                                        this.minuteAlertEnabled = true
+
+                                        this.style.backgroundColor = '#ff0000'
+                                        setTimeout(function () {
+                                            this.style.backgroundColor = null
+                                        }.bind(this), 500)
+                                    }
+
+                                    if (secs < 30 && !this.alertModeEnabled) {
+                                        this.alertModeEnabled = true
+
+                                        this.className += ' timer_alert'
+                                    }
+
+                                    timerTitle.innerHTML = date.toISOString().substr(14, 5)
+                                }.bind(this), 100)
+                            }.bind(this), 500)
+
+                            this.closeTimer = function () {
+                                if (this.starting) {
+                                    setTimeout(this.closeTimer.bind(this), 500)
+                                } else {
+                                    clearInterval(this.timeInterval)
+                                    this.className = 'timer'
+
+                                    var title = this.getElementsByClassName('timer__title')[0]
+                                    title.style.fontSize = defaultFontSize
+
+                                    setTimeout(function () {
+                                        title.innerHTML = this.defaultTimerText
+                                    }.bind(this), 400)
+                                }
+                            }
+
+                            // setTimeout(function () {
+                            //     requestFullScreen(this)
+                            // }.bind(this), 200)
+                        })
+                    }, 50) // wait for bro rendering
+                })
+
+                document.body.addEventListener('keyup', function (e) {
+                    if (e.keyCode === 27) { // escape
+                        currentActiveTimer.closeTimer()
+                    }
+                })
+
+                function requestFullScreen(element) {
+                    (element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen).call(element);
+                }
+            }, 50)
+
+            setTimeout(function () {
+                document.getElementsByClassName('controls')[0].className += ' controls__active'
+            }, 200)
+        </script>
+    </body>
+</html>
