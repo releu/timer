@@ -131,6 +131,17 @@
                 text-align: center;
                 display: none;
                 cursor: pointer;
+                transition: color ease-in-out 200ms;
+            }
+
+            @keyframes timer-close-appear {
+                0%, 50% {
+                    color: #000;
+                }
+
+                70%, 100% {
+                    color: #666;
+                }
             }
 
             .timer_enabled {
@@ -153,6 +164,7 @@
 
             .timer_enabled .timer__close {
                 display: block;
+                animation: timer-close-appear 1s ease-out ;
             }
 
             .timer_overtime .timer__title:before {
