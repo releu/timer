@@ -39,7 +39,7 @@
             }
 
             .controls__item + .controls__item {
-                margin-left: 1vw
+                margin-left: 1vh
             }
 
             .controls__row + .controls__row {
@@ -57,8 +57,8 @@
             }
 
             .controls__row:nth-child(1) .controls__item:nth-child(1) .timer {
-                left: 11.5vw;
-                right: 63.5vw;
+                left: calc((100vw - 75vw - 2vh) / 2);
+                right: calc(100vw - ((100vw - 75vw - 2vh) / 2 + 25vw));
                 top: 24.5vh;
                 bottom: 50.5vh;
                 display: flex;
@@ -73,16 +73,16 @@
             }
 
             .controls__row:nth-child(1) .controls__item:nth-child(3) .timer {
-                left: 63.5vw;
-                right: 11.5vw;
+                left: calc((100vw - 75vw - 2vh) / 2 + 50vw + 2vh);
+                right: calc((100vw - 75vw - 2vh) / 2);
                 top: 24.5vh;
                 bottom: 50.5vh;
                 display: flex;
             }
 
             .controls__row:nth-child(2) .controls__item:nth-child(1) .timer {
-                left: 11.5vw;
-                right: 63.5vw;
+                left: calc((100vw - 75vw - 2vh) / 2);
+                right: calc(100vw - ((100vw - 75vw - 2vh) / 2 + 25vw));
                 top: 50.5vh;
                 bottom: 24.5vh;
                 display: flex;
@@ -97,8 +97,8 @@
             }
 
             .controls__row:nth-child(2) .controls__item:nth-child(3) .timer {
-                left: 63.5vw;
-                right: 11.5vw;
+                left: calc((100vw - 75vw - 2vh) / 2 + 50vw + 2vh);
+                right: calc((100vw - 75vw - 2vh) / 2);
                 top: 50.5vh;
                 bottom: 24.5vh;
                 display: flex;
@@ -112,7 +112,7 @@
                 align-self: center;
                 font-size: 10vh;
                 text-align: center;
-                transition: font-size ease-out 400ms;
+                transition: font-size ease-out 250ms;
                 font-weight: 200;
                 padding-bottom: 0.5%;
                 position: relative;
@@ -120,26 +120,40 @@
 
             .timer__close {
                 position: absolute;
-                top: 0;
-                right: 0;
-                width: 20vh;
-                height: 20vh;
+                bottom: 12vh;
+                left: calc(50% - 12vw);
+                width: 24vw;
+                height: 16vh;
                 color: #666;
-                line-height: 20vh;
-                font-size: 10vh;
+                line-height: 15vh;
+                font-size: 8vh;
                 font-weight: 200;
                 text-align: center;
                 display: none;
                 cursor: pointer;
+                box-sizing: border-box;
+                border: 2px solid #666;
+                border-radius: 30vh;
                 transition: color ease-in-out 200ms;
             }
 
+            .timer__close:active {
+                border-color: #999;
+                color: #999;
+            }
+
             @keyframes timer-close-appear {
-                0%, 50% {
+                0%, 49% {
+                    opacity: 0;
+                }
+                49%, 50% {
+                    opacity: 1;
+                    border-color: #000;
                     color: #000;
                 }
 
                 70%, 100% {
+                    border-color: #666;
                     color: #666;
                 }
             }
@@ -149,7 +163,11 @@
                 top: 0 !important;
                 right: 0 !important;
                 bottom: 0 !important;
-                transition: all ease-out 400ms;
+                transition:
+                    top ease-out 200ms,
+                    right ease-out 200ms,
+                    bottom ease-out 200ms,
+                    left ease-out 200ms;
                 z-index: 100;
                 width: auto !important;
                 height: auto !important;
@@ -160,6 +178,8 @@
 
             .timer_enabled .timer__title {
                 font-size: 40vh;
+                transition: top ease-out 200ms;
+                top: -8vh;
             }
 
             .timer_enabled .timer__close {
@@ -177,28 +197,104 @@
                 background: red;
             }
 
+            .timer_alert .timer__close {
+                border-color: white;
+                color: white;
+            }
+
+            .timer__setup {
+                display: none;
+                position: absolute;
+                bottom: 3vh;
+                font-size: 4vh;
+            }
+
+            .timer__setup-down,
+            .timer__setup-up {
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 100%;
+                height: 5vh;
+                width: 5vh;
+                line-height: 4.5vh;
+                box-sizing: border-box;
+                overflow: hidden;
+                text-align: center;
+                font-weight: 200;
+                cursor: pointer;
+            }
+
+            .timer__setup-down:hover,
+            .timer__setup-up:hover {
+                border-color: rgba(255, 255, 255, 0.8);
+            }
+
+            .timer__setup-up {
+                margin-left: 2vw;
+            }
+
+            .timer_edit {
+                transform: scale(1) !important;
+                cursor: default;
+            }
+
+            .timer_edit .timer__title {
+                font-size: 8vh;
+                margin-top: -3vh;
+                transition: none;
+            }
+
+            .timer_edit .timer__setup {
+                display: flex;
+            }
+
+            .edit {
+                color: #999;
+                position: absolute;
+                top: 8px;
+                right: 16px;
+                font-size: 14px;
+                z-index: 100;
+                cursor: pointer;
+            }
+            .edit:hover {
+                color: black;
+            }
+
         </style>
     </head>
     <body>
+        <div class="edit">Настроить</div>
         <div class="container">
             <div class="controls">
                 <div class="controls__row">
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">02:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">05:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">07:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -206,19 +302,31 @@
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">10:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">15:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                     <div class="controls__item">
                         <div class="timer">
                             <div class="timer__title">20:00</div>
-                            <div class="timer__close">×</div>
+                            <div class="timer__close">Всё</div>
+                            <div class="timer__setup">
+                                <div class="timer__setup-down">−</div>
+                                <div class="timer__setup-up">+</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -247,6 +355,10 @@
                         return
                     }
 
+                    if (this.className.indexOf('timer_edit') > -1) {
+                        return
+                    }
+
                     this.starting = true
 
                     currentActiveTimer = this
@@ -256,6 +368,10 @@
                         this.defaultTimerText = timerTitle.innerText
                     }
                     var duration = parseInt(this.defaultTimerText.match(/[\d]+/)[0], 10)
+
+                    if (duration === 1) {
+                        this.minuteAlertEnabled = true
+                    }
 
                     setTimeout(function () {
                         this.starting = false
@@ -276,22 +392,22 @@
                             if (secs < 0 && !this.overTimeEnabled) {
                                 this.overTimeEnabled = true
 
-                                this.className += ' timer_overtime'
+                                this.classList.add('timer_overtime')
                             }
 
-                            if (secs <= 60 && !this.minuteAlertEnabled) {
+                            if (secs <= 61 && !this.minuteAlertEnabled) {
                                 this.minuteAlertEnabled = true
 
-                                this.style.backgroundColor = '#ff0000'
+                                this.classList.add('timer_alert')
                                 setTimeout(function () {
-                                    this.style.backgroundColor = null
-                                }.bind(this), 500)
+                                    this.classList.remove('timer_alert')
+                                }.bind(this), 950)
                             }
 
                             if (secs < 30 && !this.alertModeEnabled) {
                                 this.alertModeEnabled = true
 
-                                this.className += ' timer_alert'
+                                this.classList.add('timer_alert')
                             }
 
                             timerTitle.innerHTML = date.toISOString().substr(14, 5)
@@ -335,6 +451,68 @@
             function requestFullScreen(element) {
                 (element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen).call(element);
             }
+
+            var edit = document.querySelector('.edit')
+            edit.addEventListener('click', function () {
+                document.querySelectorAll('.timer').forEach(function(timer) {
+                    timer.classList.toggle('timer_edit')
+                    if (timer.classList.contains('timer_edit')) {
+                        edit.innerHTML = 'Готово'
+                    } else {
+                        edit.innerHTML = 'Настроить'
+                        document.location = document.location
+                    }
+                })
+            })
+
+            document.querySelectorAll('.timer').forEach(function(timer, n) {
+                var upButton = timer.querySelector('.timer__setup-up')
+                var downButton = timer.querySelector('.timer__setup-down')
+
+                var savedItem = localStorage.getItem('timer:' + n)
+                if (savedItem) {
+                    timer.querySelector('.timer__title').innerHTML = savedItem
+                }
+
+                var adjustDuration = function (direction) {
+                    var title = timer.querySelector('.timer__title')
+                    var currentDuration = parseInt(title.innerHTML.match(/[\d]+/)[0], 10)
+                    var newDuration
+
+                    if (direction === 'more') {
+                        if (currentDuration < 10) {
+                            newDuration = currentDuration + 1
+                        } else {
+                            newDuration = currentDuration + 5
+                        }
+                    } else {
+                        if (currentDuration < 10) {
+                            newDuration = currentDuration - 1
+                        } else {
+                            newDuration = currentDuration - 5
+                        }
+                    }
+
+                    newDuration = Math.max(newDuration, 1)
+                    newDuration = Math.min(newDuration, 120)
+
+                    if (newDuration < 10) {
+                        newDuration = '0' + newDuration
+                    }
+
+                    title.innerHTML = newDuration + ':00'
+
+                    localStorage.setItem('timer:' + n, newDuration + ':00')
+                }
+
+                downButton.addEventListener('click', function () {
+                    adjustDuration('less')
+                })
+
+                upButton.addEventListener('click', function () {
+                    adjustDuration('more')
+                })
+            })
         </script>
     </body>
 </html>
