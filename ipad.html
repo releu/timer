@@ -336,6 +336,7 @@
 
                     if (!this.defaultTimerText) {
                         this.defaultTimerText = timerTitle.innerText
+                        this.defaultTimerHTML = timerTitle.innerHTML
                     }
                     var duration = parseInt(this.defaultTimerText.match(/[\d]+/)[0], 10)
 
@@ -397,7 +398,7 @@
 
                             setTimeout(function () {
                                 var title = this.getElementsByClassName('timer__title')[0]
-                                title.innerHTML = this.defaultTimerText
+                                title.innerHTML = this.defaultTimerHTML
                             }.bind(this), 400)
                         }
                     }
