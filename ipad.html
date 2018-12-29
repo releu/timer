@@ -12,8 +12,9 @@
                 padding: 0;
                 background: white;
                 color: white;
-                font-family: "YS Text", sans-serif;
+                font-family: "Helvetica Neue";
                 background: #f5f5f5;
+                font-weight: 400;
             }
 
             .container {
@@ -66,21 +67,21 @@
             .timer__title {
                 font-size: 67px;
                 text-align: center;
-                font-weight: 200;
+                font-weight: 400;
                 padding-top: 124px;
                 position: relative;
             }
 
             .timer__close {
                 position: absolute;
-                bottom: 114px;
+                bottom: 128px;
                 left: 390px;
                 width: 245px;
                 height: 108px;
                 color: #666;
                 line-height: 101px;
                 font-size: 54px;
-                font-weight: 200;
+                font-weight: 400;
                 text-align: center;
                 display: none;
                 cursor: pointer;
@@ -105,18 +106,23 @@
             }
 
             .timer_enabled .timer__title {
-                font-size: 269px;
-                top: -48px;
+                font-size: 240px;
+                top: -32px;
             }
 
             .timer_enabled .timer__close {
                 display: block;
             }
 
-            .timer_overtime .timer__title:before {
+            .timer__title-before {
+              display: none;
+            }
+
+            .timer_overtime .timer__title-before {
                 position: absolute;
-                content: '−';
-                right: 100%;
+                left: 54px;
+                top: 102px;
+                display: block;
             }
 
             .timer_alert {
@@ -145,7 +151,7 @@
                 box-sizing: border-box;
                 overflow: hidden;
                 text-align: center;
-                font-weight: 200;
+                font-weight: 400;
                 cursor: pointer;
             }
 
@@ -194,7 +200,10 @@
                 <div class="controls__row">
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">02:00</div>
+                            <div class="timer__title">
+                              <div class="timer__title-before">−</div>
+                              <div class="timer__title-value">02:00</div>
+                            </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -204,7 +213,10 @@
                     </div>
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">05:00</div>
+                          <div class="timer__title">
+                            <div class="timer__title-before">−</div>
+                            <div class="timer__title-value">05:00</div>
+                          </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -214,7 +226,10 @@
                     </div>
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">07:00</div>
+                          <div class="timer__title">
+                            <div class="timer__title-before">−</div>
+                            <div class="timer__title-value">07:00</div>
+                          </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -226,7 +241,10 @@
                 <div class="controls__row">
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">10:00</div>
+                          <div class="timer__title">
+                            <div class="timer__title-before">−</div>
+                            <div class="timer__title-value">10:00</div>
+                          </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -236,7 +254,10 @@
                     </div>
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">15:00</div>
+                          <div class="timer__title">
+                            <div class="timer__title-before">−</div>
+                            <div class="timer__title-value">15:00</div>
+                          </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -246,7 +267,10 @@
                     </div>
                     <div class="controls__item">
                         <div class="timer">
-                            <div class="timer__title">20:00</div>
+                          <div class="timer__title">
+                            <div class="timer__title-before">−</div>
+                            <div class="timer__title-value">20:00</div>
+                          </div>
                             <div class="timer__close">Всё</div>
                             <div class="timer__setup">
                                 <div class="timer__setup-down">−</div>
@@ -355,7 +379,7 @@
                                 this.classList.add('timer_alert')
                             }
 
-                            timerTitle.innerHTML = date.toISOString().substr(14, 5)
+                            timerTitle.getElementsByClassName('timer__title-value')[0].innerHTML = date.toISOString().substr(14, 5)
                         }.bind(this), 100)
                     }.bind(this), 500);
 
